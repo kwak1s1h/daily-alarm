@@ -6,29 +6,33 @@ dotenv.config();
 
 const host = 'https://ggm.gondr.net';
 
-const webhookClient = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBHOOK_TOKEN });
+const webhookLinks = require("./webhook-link.json");
 const now = new Date(Date.now());
-
-getDailyNotes().then(list => {
-	const embed = new EmbedBuilder()
-		.setTitle('**일간보고서를 작성해주세요 (클릭 시 이동)**')
-		.setURL(`${host}/project/team/27`)
-		.setFields(list)
-		.setColor(0x00FFFF)
-		.setTimestamp()
-		.setFooter({text: `${list.length} / 5`});
+for(let i = 0; i < webhookLinks.length; i++)
+{
+	const webhookClient = new WebhookClient({ url: webhookLinks[i].url });
 	
-	if(list.length <= 0)
-	{
-		embed.setDescription('아무도 작성하지 않음.')
-	}
-	
-	webhookClient.send({
-		content: '@everyone',
-		username: '일간보고서 작성 알림',
-		embeds: [embed],
+	getDailyNotes().then(list => {
+		const embed = new EmbedBuilder()
+			.setTitle('**일간보고서를 작성해주세요 (클릭 시 이동)**')
+			.setURL(`${host}/project/team/${webhookLinks[i].team}`)
+			.setFields(list)
+			.setColor(0x00FFFF)
+			.setTimestamp()
+			.setFooter({text: `${list.length} / 5`});
+		
+		if(list.length <= 0)
+		{
+			embed.setDescription('아무도 작성하지 않음.')
+		}
+		
+		webhookClient.send({
+			content: '@everyone',
+			username: '일간보고서 작성 알림',
+			embeds: [embed],
+		});
 	});
-})
+}
 
 async function getDailyNotes() {
 	let page = await getPage();
