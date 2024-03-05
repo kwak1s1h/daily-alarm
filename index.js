@@ -14,7 +14,7 @@ for(let i = 0; i < webhookLinks.length; i++)
 	
 	getDailyNotes().then(list => {
 		const embed = new EmbedBuilder()
-			.setTitle('**일간보고서를 작성해주세요 (클릭 시 이동)**')
+			.setTitle('**일간보고서를 작성해주세요! (클릭 시 이동)**')
 			.setURL(`${host}/project/team/${webhookLinks[i].team}`)
 			.setFields(list)
 			.setColor(0x00FFFF)
@@ -23,7 +23,7 @@ for(let i = 0; i < webhookLinks.length; i++)
 		
 		if(list.length <= 0)
 		{
-			embed.setDescription('아무도 작성하지 않음.')
+			embed.setDescription('아무도 작성하지 않았습니다.')
 		}
 		
 		webhookClient.send({
