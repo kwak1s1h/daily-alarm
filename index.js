@@ -1,13 +1,13 @@
 const { EmbedBuilder, WebhookClient } = require('discord.js');
 const axios = require('axios').default;
 const cheerio = require("cheerio");
-const dotenv = require('dotenv');
-dotenv.config();
 
 const host = 'https://ggm.gondr.net';
 
 const webhookLinks = require("./webhook-link.json");
+const TOKEN = require("./token.json");
 const now = new Date(Date.now());
+console.log(`[${now.toString()}] Start to load daily note...`);
 for(let i = 0; i < webhookLinks.length; i++)
 {
 	const webhookClient = new WebhookClient({ url: webhookLinks[i].url });
@@ -48,6 +48,6 @@ function getDateString(date) {
 
 async function getPage() {
     return await axios.get(`${host}/api/team/record/daily?team=27&start_day=${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, {
-        headers: { "Authorization" : `Bearer ${process.env.TOKEN}` }
+        headers: { "Authorization" : `Bearer ${TOKEN}` }
     });
 }
