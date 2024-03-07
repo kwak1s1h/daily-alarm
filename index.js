@@ -12,7 +12,7 @@ for(let i = 0; i < webhookLinks.length; i++)
 {
 	const webhookClient = new WebhookClient({ url: webhookLinks[i].url });
 	
-	getDailyNotes().then(list => {
+	getDailyNotes(webhookLinks[i].team).then(list => {
 		const embed = new EmbedBuilder()
 			.setTitle('**일간보고서를 작성해주세요! (클릭 시 이동)**')
 			.setURL(`${host}/project/team/${webhookLinks[i].team}`)
@@ -34,8 +34,8 @@ for(let i = 0; i < webhookLinks.length; i++)
 	});
 }
 
-async function getDailyNotes() {
-	let page = await getPage();
+async function getDailyNotes(team) {
+	let page = await getPage(team);
 	let list = page.data.list;
     return list.map(elem => {
 		return { name: elem.name, value: elem.content };
@@ -46,8 +46,8 @@ function getDateString(date) {
 	return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분`;
 }
 
-async function getPage() {
-    return await axios.get(`${host}/api/team/record/daily?team=27&start_day=${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, {
+async function getPage(team) {
+    return await axios.get(`${host}/api/team/record/daily?team=${team}&start_day=${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`, {
         headers: { "Authorization" : `Bearer ${TOKEN}` }
     });
 }
