@@ -23,6 +23,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         console.log(err);
         return await interaction.reply({ content: `${err}` });
     }
+    if(!team) {
+        return await interaction.reply({ content: "팀을 찾을 수 없습니다! 등록을 시도해 주세요." });
+    }
     const list = await getDailyNotes(team, new Date(Date.now()));
         const webhookClient = new WebhookClient({ url: team.webhook_url });
         const embed = new EmbedBuilder()

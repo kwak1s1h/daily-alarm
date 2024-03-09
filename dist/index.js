@@ -29,6 +29,7 @@ var __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__
   isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
   mod2
 ));
+var __toCommonJS = (mod2) => __copyProps(__defProp({}, "__esModule", { value: true }), mod2);
 var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
@@ -363,12 +364,12 @@ var require_hashGet = __commonJS({
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
     function hashGet(key) {
-      var data3 = this.__data__;
+      var data4 = this.__data__;
       if (nativeCreate) {
-        var result = data3[key];
+        var result = data4[key];
         return result === HASH_UNDEFINED ? void 0 : result;
       }
-      return hasOwnProperty.call(data3, key) ? data3[key] : void 0;
+      return hasOwnProperty.call(data4, key) ? data4[key] : void 0;
     }
     module2.exports = hashGet;
   }
@@ -382,8 +383,8 @@ var require_hashHas = __commonJS({
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
     function hashHas(key) {
-      var data3 = this.__data__;
-      return nativeCreate ? data3[key] !== void 0 : hasOwnProperty.call(data3, key);
+      var data4 = this.__data__;
+      return nativeCreate ? data4[key] !== void 0 : hasOwnProperty.call(data4, key);
     }
     module2.exports = hashHas;
   }
@@ -396,9 +397,9 @@ var require_hashSet = __commonJS({
     var nativeCreate = require_nativeCreate();
     var HASH_UNDEFINED = "__lodash_hash_undefined__";
     function hashSet(key, value) {
-      var data3 = this.__data__;
+      var data4 = this.__data__;
       this.size += this.has(key) ? 0 : 1;
-      data3[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
+      data4[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
       return this;
     }
     module2.exports = hashSet;
@@ -480,15 +481,15 @@ var require_listCacheDelete = __commonJS({
     var arrayProto = Array.prototype;
     var splice = arrayProto.splice;
     function listCacheDelete(key) {
-      var data3 = this.__data__, index = assocIndexOf(data3, key);
+      var data4 = this.__data__, index = assocIndexOf(data4, key);
       if (index < 0) {
         return false;
       }
-      var lastIndex = data3.length - 1;
+      var lastIndex = data4.length - 1;
       if (index == lastIndex) {
-        data3.pop();
+        data4.pop();
       } else {
-        splice.call(data3, index, 1);
+        splice.call(data4, index, 1);
       }
       --this.size;
       return true;
@@ -503,8 +504,8 @@ var require_listCacheGet = __commonJS({
     "use strict";
     var assocIndexOf = require_assocIndexOf();
     function listCacheGet(key) {
-      var data3 = this.__data__, index = assocIndexOf(data3, key);
-      return index < 0 ? void 0 : data3[index][1];
+      var data4 = this.__data__, index = assocIndexOf(data4, key);
+      return index < 0 ? void 0 : data4[index][1];
     }
     module2.exports = listCacheGet;
   }
@@ -528,12 +529,12 @@ var require_listCacheSet = __commonJS({
     "use strict";
     var assocIndexOf = require_assocIndexOf();
     function listCacheSet(key, value) {
-      var data3 = this.__data__, index = assocIndexOf(data3, key);
+      var data4 = this.__data__, index = assocIndexOf(data4, key);
       if (index < 0) {
         ++this.size;
-        data3.push([key, value]);
+        data4.push([key, value]);
       } else {
-        data3[index][1] = value;
+        data4[index][1] = value;
       }
       return this;
     }
@@ -615,8 +616,8 @@ var require_getMapData = __commonJS({
     "use strict";
     var isKeyable = require_isKeyable();
     function getMapData(map, key) {
-      var data3 = map.__data__;
-      return isKeyable(key) ? data3[typeof key == "string" ? "string" : "hash"] : data3.map;
+      var data4 = map.__data__;
+      return isKeyable(key) ? data4[typeof key == "string" ? "string" : "hash"] : data4.map;
     }
     module2.exports = getMapData;
   }
@@ -666,9 +667,9 @@ var require_mapCacheSet = __commonJS({
     "use strict";
     var getMapData = require_getMapData();
     function mapCacheSet(key, value) {
-      var data3 = getMapData(this, key), size = data3.size;
-      data3.set(key, value);
-      this.size += data3.size == size ? 0 : 1;
+      var data4 = getMapData(this, key), size = data4.size;
+      data4.set(key, value);
+      this.size += data4.size == size ? 0 : 1;
       return this;
     }
     module2.exports = mapCacheSet;
@@ -4621,18 +4622,26 @@ var require_fast_deep_equal = __commonJS({
 });
 
 // src/index.ts
-var import_discord4 = require("discord.js");
+var src_exports = {};
+__export(src_exports, {
+  getDailyNotes: () => getDailyNotes,
+  getPage: () => getPage,
+  sendDailyNotes: () => sendDailyNotes
+});
+module.exports = __toCommonJS(src_exports);
+var import_discord5 = require("discord.js");
 
 // src/config.ts
 var import_dotenv = __toESM(require("dotenv"));
 import_dotenv.default.config();
-var { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
+var { DISCORD_TOKEN, DISCORD_CLIENT_ID, GGM_TOKEN } = process.env;
 if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID) {
   throw new Error("Missing environment variables");
 }
 var config = {
   DISCORD_TOKEN,
-  DISCORD_CLIENT_ID
+  DISCORD_CLIENT_ID,
+  GGM_TOKEN
 };
 
 // src/commands/register.ts
@@ -8285,14 +8294,14 @@ var EmbedBuilder = (_a = class {
    *
    * @param data - The API data to create this embed with
    */
-  constructor(data3 = {}) {
+  constructor(data4 = {}) {
     /**
      * The API data associated with this embed.
      */
     __publicField(this, "data");
-    this.data = { ...data3 };
-    if (data3.timestamp)
-      this.data.timestamp = new Date(data3.timestamp).toISOString();
+    this.data = { ...data4 };
+    if (data4.timestamp)
+      this.data.timestamp = new Date(data4.timestamp).toISOString();
   }
   /**
    * Appends fields to the embed.
@@ -8539,8 +8548,8 @@ var StringSelectMenuOptionBuilder = (_a2 = class {
    * 	.setLabel('woah');
    * ```
    */
-  constructor(data3 = {}) {
-    this.data = data3;
+  constructor(data4 = {}) {
+    this.data = data4;
   }
   /**
    * Sets the label for this option.
@@ -8657,12 +8666,12 @@ var ComponentBuilder = (_a3 = class {
    *
    * @param data - The data to construct a component out of
    */
-  constructor(data3) {
+  constructor(data4) {
     /**
      * The API data associated with this component.
      */
     __publicField(this, "data");
-    this.data = data3;
+    this.data = data4;
   }
 }, __name4(_a3, "ComponentBuilder"), _a3);
 var _a4;
@@ -8695,8 +8704,8 @@ var ButtonBuilder = (_a4 = class extends ComponentBuilder {
    * 	.setCustomId('another cool button');
    * ```
    */
-  constructor(data3) {
-    super({ type: ComponentType.Button, ...data3 });
+  constructor(data4) {
+    super({ type: ComponentType.Button, ...data4 });
   }
   /**
    * Sets the style of this button.
@@ -8855,8 +8864,8 @@ var ChannelSelectMenuBuilder = (_a6 = class extends BaseSelectMenuBuilder {
    * 	.setMinValues(2);
    * ```
    */
-  constructor(data3) {
-    super({ ...data3, type: ComponentType.ChannelSelect });
+  constructor(data4) {
+    super({ ...data4, type: ComponentType.ChannelSelect });
   }
   /**
    * Adds channel types to this select menu.
@@ -8948,8 +8957,8 @@ var MentionableSelectMenuBuilder = (_a7 = class extends BaseSelectMenuBuilder {
    * 	.setMinValues(1);
    * ```
    */
-  constructor(data3) {
-    super({ ...data3, type: ComponentType.MentionableSelect });
+  constructor(data4) {
+    super({ ...data4, type: ComponentType.MentionableSelect });
   }
   /**
    * Adds default roles to this auto populated select menu.
@@ -9036,8 +9045,8 @@ var RoleSelectMenuBuilder = (_a8 = class extends BaseSelectMenuBuilder {
    * 	.setMinValues(1);
    * ```
    */
-  constructor(data3) {
-    super({ ...data3, type: ComponentType.RoleSelect });
+  constructor(data4) {
+    super({ ...data4, type: ComponentType.RoleSelect });
   }
   /**
    * Adds default roles to this auto populated select menu.
@@ -9105,8 +9114,8 @@ var StringSelectMenuBuilder = (_a9 = class extends BaseSelectMenuBuilder {
    * 	});
    * ```
    */
-  constructor(data3) {
-    const { options, ...initData } = data3 ?? {};
+  constructor(data4) {
+    const { options, ...initData } = data4 ?? {};
     super({ ...initData, type: ComponentType.StringSelect });
     /**
      * The options within this select menu.
@@ -9213,8 +9222,8 @@ var UserSelectMenuBuilder = (_a10 = class extends BaseSelectMenuBuilder {
    * 	.setMinValues(1);
    * ```
    */
-  constructor(data3) {
-    super({ ...data3, type: ComponentType.UserSelect });
+  constructor(data4) {
+    super({ ...data4, type: ComponentType.UserSelect });
   }
   /**
    * Adds default users to this auto populated select menu.
@@ -9298,8 +9307,8 @@ var TextInputBuilder = (_a11 = class extends ComponentBuilder {
    * 	.setStyle(TextInputStyle.Paragraph);
    * ```
    */
-  constructor(data3) {
-    super({ type: ComponentType.TextInput, ...data3 });
+  constructor(data4) {
+    super({ type: ComponentType.TextInput, ...data4 });
   }
   /**
    * Sets the custom id for this text input.
@@ -9392,29 +9401,29 @@ var TextInputBuilder = (_a11 = class extends ComponentBuilder {
     return (0, import_fast_deep_equal.default)(other, this.data);
   }
 }, __name4(_a11, "TextInputBuilder"), _a11);
-function createComponentBuilder(data3) {
-  if (data3 instanceof ComponentBuilder) {
-    return data3;
+function createComponentBuilder(data4) {
+  if (data4 instanceof ComponentBuilder) {
+    return data4;
   }
-  switch (data3.type) {
+  switch (data4.type) {
     case ComponentType.ActionRow:
-      return new ActionRowBuilder(data3);
+      return new ActionRowBuilder(data4);
     case ComponentType.Button:
-      return new ButtonBuilder(data3);
+      return new ButtonBuilder(data4);
     case ComponentType.StringSelect:
-      return new StringSelectMenuBuilder(data3);
+      return new StringSelectMenuBuilder(data4);
     case ComponentType.TextInput:
-      return new TextInputBuilder(data3);
+      return new TextInputBuilder(data4);
     case ComponentType.UserSelect:
-      return new UserSelectMenuBuilder(data3);
+      return new UserSelectMenuBuilder(data4);
     case ComponentType.RoleSelect:
-      return new RoleSelectMenuBuilder(data3);
+      return new RoleSelectMenuBuilder(data4);
     case ComponentType.MentionableSelect:
-      return new MentionableSelectMenuBuilder(data3);
+      return new MentionableSelectMenuBuilder(data4);
     case ComponentType.ChannelSelect:
-      return new ChannelSelectMenuBuilder(data3);
+      return new ChannelSelectMenuBuilder(data4);
     default:
-      throw new Error(`Cannot properly serialize component type: ${data3.type}`);
+      throw new Error(`Cannot properly serialize component type: ${data4.type}`);
   }
 }
 __name4(createComponentBuilder, "createComponentBuilder");
@@ -9454,8 +9463,8 @@ var ActionRowBuilder = (_a12 = class extends ComponentBuilder {
    * 	.addComponents(button2, button3);
    * ```
    */
-  constructor({ components, ...data3 } = {}) {
-    super({ type: ComponentType.ActionRow, ...data3 });
+  constructor({ components, ...data4 } = {}) {
+    super({ type: ComponentType.ActionRow, ...data4 });
     /**
      * The components within this action row.
      */
@@ -9511,7 +9520,7 @@ var ModalBuilder = (_a13 = class {
    *
    * @param data - The API data to create this modal with
    */
-  constructor({ components, ...data3 } = {}) {
+  constructor({ components, ...data4 } = {}) {
     /**
      * The API data associated with this modal.
      */
@@ -9520,7 +9529,7 @@ var ModalBuilder = (_a13 = class {
      * The components within this modal.
      */
     __publicField(this, "components", []);
-    this.data = { ...data3 };
+    this.data = { ...data4 };
     this.components = components?.map((component) => createComponentBuilder(component)) ?? [];
   }
   /**
@@ -10669,8 +10678,8 @@ var ContextMenuCommandBuilder = (_a25 = class {
     return { ...this };
   }
 }, __name4(_a25, "ContextMenuCommandBuilder"), _a25);
-function embedLength(data3) {
-  return (data3.title?.length ?? 0) + (data3.description?.length ?? 0) + (data3.fields?.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0) ?? 0) + (data3.footer?.text.length ?? 0) + (data3.author?.name.length ?? 0);
+function embedLength(data4) {
+  return (data4.title?.length ?? 0) + (data4.description?.length ?? 0) + (data4.fields?.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0) ?? 0) + (data4.footer?.text.length ?? 0) + (data4.author?.name.length ?? 0);
 }
 __name4(embedLength, "embedLength");
 
@@ -10767,21 +10776,54 @@ async function execute2(interaction) {
   return await interaction.reply({ embeds: [embed] });
 }
 
+// src/commands/test.ts
+var test_exports = {};
+__export(test_exports, {
+  data: () => data3,
+  execute: () => execute3
+});
+var import_discord3 = require("discord.js");
+var host = "ggm.gondr.net";
+var data3 = new import_discord3.SlashCommandBuilder().setName("test").setDescription("\uD14C\uC2A4\uD2B8\uB85C \uC9C0\uC815\uD55C \uB0A0\uC790\uC758 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB4E4\uC744 \uCD9C\uB825\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uD14C\uC2A4\uD2B8");
+async function execute3(interaction) {
+  let team;
+  try {
+    const sql = "SELECT * FROM `team` WHERE `guild` = ?";
+    const values = [interaction.guildId];
+    const [rows, fields] = await pool.execute(sql, values);
+    team = rows[0];
+  } catch (err) {
+    console.log(err);
+    return await interaction.reply({ content: `${err}` });
+  }
+  if (!team) {
+    return await interaction.reply({ content: "\uD300\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4! \uB4F1\uB85D\uC744 \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694." });
+  }
+  const list = await getDailyNotes(team, new Date(Date.now()));
+  const webhookClient = new import_discord3.WebhookClient({ url: team.webhook_url });
+  const embed = new EmbedBuilder().setTitle("**\uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC791\uC131\uD574\uC8FC\uC138\uC694! (\uD074\uB9AD \uC2DC \uC774\uB3D9)**").setURL(`http://${host}/project/team/${team.id}`).setFields(list).setTimestamp().setFooter({ text: `${list.length}/${team.cnt}` });
+  webhookClient.send({
+    embeds: [embed]
+  });
+  return await interaction.reply({ content: "\uD14C\uC2A4\uD2B8\uB97C \uC2E4\uD589\uD588\uC2B5\uB2C8\uB2E4." });
+}
+
 // src/commands/index.ts
 var commands = {
   register: register_exports,
-  remove: remove_exports
+  remove: remove_exports,
+  test: test_exports
 };
 
 // src/deploy-commands.ts
-var import_discord3 = require("discord.js");
+var import_discord4 = require("discord.js");
 var commandsData = Object.values(commands).map((command) => command.data);
-var rest = new import_discord3.REST({ version: "10" }).setToken(config.DISCORD_TOKEN);
+var rest = new import_discord4.REST({ version: "10" }).setToken(config.DISCORD_TOKEN);
 async function deployCommands({ guildId }) {
   try {
     console.log("Started refreshing application (/) commands.");
     await rest.put(
-      import_discord3.Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, guildId),
+      import_discord4.Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, guildId),
       {
         body: commandsData
       }
@@ -10793,16 +10835,20 @@ async function deployCommands({ guildId }) {
 }
 
 // src/index.ts
-var client = new import_discord4.Client({
+var import_node_schedule = require("node-schedule");
+var import_axios2 = __toESM(require("axios"));
+var host2 = "ggm.gondr.net";
+var client = new import_discord5.Client({
   intents: [
-    import_discord4.GatewayIntentBits.Guilds,
-    import_discord4.GatewayIntentBits.GuildMessages,
-    import_discord4.GatewayIntentBits.DirectMessages
+    import_discord5.GatewayIntentBits.Guilds,
+    import_discord5.GatewayIntentBits.GuildMessages,
+    import_discord5.GatewayIntentBits.DirectMessages
   ]
 });
-client.once("ready", () => {
+client.once("ready", async () => {
   console.log("Discord bot is ready! \u{1F916}");
-  client.guilds.cache.forEach(async (g2) => {
+  let guilds = await client.guilds.fetch();
+  guilds.forEach(async (g2) => {
     await deployCommands({ guildId: g2.id });
   });
 });
@@ -10813,7 +10859,7 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) {
     return;
   }
-  if (interaction.commandType !== import_discord4.ApplicationCommandType.ChatInput) {
+  if (interaction.commandType !== import_discord5.ApplicationCommandType.ChatInput) {
     return;
   }
   const { commandName } = interaction;
@@ -10821,7 +10867,46 @@ client.on("interactionCreate", async (interaction) => {
     commands[commandName].execute(interaction);
   }
 });
+(0, import_node_schedule.scheduleJob)("20 20 * * 1-5", sendDailyNotes);
+(0, import_node_schedule.scheduleJob)("55 23 * * 1-5", sendDailyNotes);
 client.login(config.DISCORD_TOKEN);
+async function sendDailyNotes() {
+  let registered;
+  try {
+    const sql = "SELECT * FROM `team`";
+    const [rows, fields] = await pool.execute(sql);
+    registered = rows;
+  } catch (err) {
+    return;
+  }
+  registered.forEach(async (team) => {
+    const list = await getDailyNotes(team, new Date(Date.now()));
+    const webhookClient = new import_discord5.WebhookClient({ url: team.webhook_url });
+    const embed = new import_discord5.EmbedBuilder().setTitle("**\uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC791\uC131\uD574\uC8FC\uC138\uC694! (\uD074\uB9AD \uC2DC \uC774\uB3D9)**").setURL(`http://${host2}/project/team/${team.id}`).setFields(list).setTimestamp().setFooter({ text: `${list.length}/${team.cnt}` });
+    webhookClient.send({
+      content: "@everyone",
+      embeds: [embed]
+    });
+  });
+}
+async function getDailyNotes(team, t3) {
+  let page = await getPage(team, t3);
+  let list = page.data.list;
+  return list.map((note) => {
+    return { name: note.name, value: note.content };
+  });
+}
+async function getPage(team, t3) {
+  return await import_axios2.default.get(`http://${host2}/api/team/record/daily?team=${team.id}&start_day=${t3.getFullYear()}-${t3.getMonth() + 1}-${t3.getDate()}`, {
+    headers: { "Authorization": `Bearer ${config.GGM_TOKEN}` }
+  });
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  getDailyNotes,
+  getPage,
+  sendDailyNotes
+});
 /*! Bundled license information:
 
 @sapphire/shapeshift/dist/esm/index.mjs:
