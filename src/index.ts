@@ -16,9 +16,10 @@ const client = new Client({
     ],
 });
 
-client.once("ready", () => {
+client.once("ready", async () => {
     console.log("Discord bot is ready! 🤖");
-    client.guilds.cache.forEach(async g => {
+    let guilds = await client.guilds.fetch();
+    guilds.forEach(async g => {
         await deployCommands({ guildId: g.id });
     })
 });
