@@ -32,7 +32,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setTimestamp()
             .setFooter({ text: `${list.length}/${team.cnt}` });
         webhookClient.send({
-            content: '@everyone',
             embeds: [embed],
         });
     return await interaction.reply({ content: "테스트를 실행했습니다." });
