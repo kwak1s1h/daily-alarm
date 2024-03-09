@@ -82,7 +82,7 @@ export async function getDailyNotes(team: Team, t: Date): Promise<APIEmbedField[
 }
 
 export async function getPage(team: Team, t: Date) {
-    return await axios.get(`${host}/api/team/record/daily?team=${team.id}&start_day=${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`, {
+    return await axios.get(`http://${host}/api/team/record/daily?team=${team.id}&start_day=${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`, {
         headers: { "Authorization" : `Bearer ${config.GGM_TOKEN}` }
     });
 }

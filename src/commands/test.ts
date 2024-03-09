@@ -9,17 +9,18 @@ const host = 'ggm.gondr.net';
 export const data = new SlashCommandBuilder()
     .setName("test")
     .setDescription("테스트로 지정한 날자의 일간보고서들을 출력합니다.")
-    .setNameLocalization("ko", "테스트")
+    .setNameLocalization("ko", "테스트");
 
 export async function execute(interaction: ChatInputCommandInteraction) {
     let team;
     try {
-        const sql = 'SELECT * FROM `team` where `guild` = `?`';
+        const sql = 'SELECT * FROM `team` WHERE `guild` = ?';
         const values: any = [interaction.guildId];
         const [rows, fields]: [Team[], FieldPacket[]] = await pool.execute(sql, values);
         team = rows[0];
     }
     catch (err) {
+        console.log(err);
         return await interaction.reply({ content: `${err}` });
     }
     const list = await getDailyNotes(team, new Date(Date.now()));
