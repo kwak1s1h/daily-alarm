@@ -46,7 +46,7 @@ scheduleJob("55 23 * * 1-5", sendDailyNotes);
 
 client.login(config.DISCORD_TOKEN);
 
-async function sendDailyNotes() {
+export async function sendDailyNotes() {
     let registered;
     try {
         const sql = 'SELECT * FROM `team`';
@@ -73,7 +73,7 @@ async function sendDailyNotes() {
 }
 
 
-async function getDailyNotes(team: Team, t: Date): Promise<APIEmbedField[]> {
+export async function getDailyNotes(team: Team, t: Date): Promise<APIEmbedField[]> {
     let page = await getPage(team, t);
 	let list = page.data.list;
     return list.map((note: DailyNote) => {
@@ -81,13 +81,13 @@ async function getDailyNotes(team: Team, t: Date): Promise<APIEmbedField[]> {
 	});
 }
 
-async function getPage(team: Team, t: Date) {
+export async function getPage(team: Team, t: Date) {
     return await axios.get(`${host}/api/team/record/daily?team=${team.id}&start_day=${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`, {
         headers: { "Authorization" : `Bearer ${config.GGM_TOKEN}` }
     });
 }
 
-interface Team extends RowDataPacket {
+export interface Team extends RowDataPacket {
     id: number,
     name: string,
     cnt: number,
@@ -96,7 +96,7 @@ interface Team extends RowDataPacket {
     color: string,
 }
 
-interface DailyNote {
+export interface DailyNote {
     name: string, // the author of note
     content: string // the content of note
 }
