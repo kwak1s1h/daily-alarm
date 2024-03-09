@@ -66,7 +66,6 @@ export async function sendDailyNotes() {
             .setTimestamp()
             .setFooter({ text: `${list.length}/${team.cnt}` });
         webhookClient.send({
-            content: '@everyone',
             embeds: [embed],
         });
     });
