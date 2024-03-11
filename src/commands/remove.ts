@@ -21,16 +21,39 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
     
     try {
-        let sql: string = 'SELECT `guild` FROM `team` WHERE `name` = ?';
+        let sql: string = 'SELECT `id`, `guild`, `webhook_url` FROM `team` WHERE `guild` = ?';
         let values: any[] = [guild.id];
         let [result, fields]: [Team[], FieldPacket[]] = await pool.query(sql, values);
+        const team = result[0];
 
-        if(result[0].guild == guild.id) {
+        if(!team) {
+            return await interaction.reply({ content: "등록된 팀을 찾을 수 없습니다.", ephemeral: true });
+        }
+
+        if(team.guild == guild.id) {
             sql = 'DELETE FROM `team` WHERE id = ?';
-            values = [result[0].id]; 
+            values = [team.id]; 
             [result, fields] = await pool.query(sql, values);
         }
+        let webhookId;
+        const pattern = /\/webhooks\/(\d+)/;
+        const matches = team.webhook_url.match(pattern);
+        if (matches) {
+            webhookId = matches[1];
+        } else {
+            embed.setTitle('팀 정보를 등록 해제하는 중 오류가 발생했습니다.')
+                .setDescription(`${matches}`);
+            return await interaction.reply({ embeds: [embed] });
+        }
+
+        const webhooks = await guild.fetchWebhooks();
+        const webhook = webhooks.get(webhookId);
+        if(webhook) {
+            webhook.delete();
+        }
+
     } catch(err) {
+        console.log(err);
         embed.setTitle('팀 정보를 등록 해제하는 중 오류가 발생했습니다.')
             .setDescription(`${err}`);
         return await interaction.reply({ embeds: [embed] });

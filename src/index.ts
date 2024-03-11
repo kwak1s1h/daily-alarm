@@ -37,6 +37,7 @@ client.on("interactionCreate", async (interaction) => {
     }
     const { commandName } = interaction;
     if (commands[commandName as keyof typeof commands]) {
+        console.log(commandName);    
         commands[commandName as keyof typeof commands].execute(interaction);
     }
 });
