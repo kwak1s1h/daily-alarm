@@ -10767,13 +10767,38 @@ async function execute2(interaction) {
     return await interaction.reply({ content: "\uB514\uC2A4\uCF54\uB4DC \uC11C\uBC84\uC5D0\uC11C\uB9CC \uC0AC\uC6A9 \uAC00\uB2A5\uD55C \uBA85\uB839\uC5B4\uC785\uB2C8\uB2E4.", ephemeral: true });
   }
   try {
-    const sql = "SELECT `guild` FROM `team`";
-    const [result, fields] = await pool.query(sql);
+    let sql = "SELECT `id`, `guild`, `webhook_url` FROM `team` WHERE `guild` = ?";
+    let values = [guild.id];
+    let [result, fields] = await pool.query(sql, values);
+    const team = result[0];
+    if (!team) {
+      return await interaction.reply({ content: "\uB4F1\uB85D\uB41C \uD300\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.", ephemeral: true });
+    }
+    if (team.guild == guild.id) {
+      sql = "DELETE FROM `team` WHERE id = ?";
+      values = [team.id];
+      [result, fields] = await pool.query(sql, values);
+    }
+    let webhookId;
+    const pattern = /\/webhooks\/(\d+)/;
+    const matches = team.webhook_url.match(pattern);
+    if (matches) {
+      webhookId = matches[1];
+    } else {
+      embed.setTitle("\uD300 \uC815\uBCF4\uB97C \uB4F1\uB85D \uD574\uC81C\uD558\uB294 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.").setDescription(`${matches}`);
+      return await interaction.reply({ embeds: [embed] });
+    }
+    const webhooks = await guild.fetchWebhooks();
+    const webhook = webhooks.get(webhookId);
+    if (webhook) {
+      webhook.delete();
+    }
   } catch (err) {
+    console.log(err);
     embed.setTitle("\uD300 \uC815\uBCF4\uB97C \uB4F1\uB85D \uD574\uC81C\uD558\uB294 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.").setDescription(`${err}`);
     return await interaction.reply({ embeds: [embed] });
   }
-  return await interaction.reply({ embeds: [embed] });
+  return await interaction.reply({ content: "\uD300 \uB4F1\uB85D\uC774 \uC815\uC0C1\uC801\uC73C\uB85C \uD574\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4!", ephemeral: true });
 }
 
 // src/commands/test.ts
@@ -10864,6 +10889,7 @@ client.on("interactionCreate", async (interaction) => {
   }
   const { commandName } = interaction;
   if (commands[commandName]) {
+    console.log(commandName);
     commands[commandName].execute(interaction);
   }
 });
