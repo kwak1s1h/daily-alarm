@@ -42,12 +42,12 @@ client.on("interactionCreate", async (interaction) => {
     }
 });
 
-scheduleJob("20 20 * * 1-5", sendDailyNotes);
-scheduleJob("55 23 * * 1-5", sendDailyNotes);
+scheduleJob("20 20 * * 1-5", () => sendDailyNotes());
+scheduleJob("55 23 * * 1-5", () => sendDailyNotes());
 
 client.login(config.DISCORD_TOKEN);
 
-export async function sendDailyNotes() {
+export async function sendDailyNotes(mention: Boolean = true) {
     let registered;
     try {
         const sql = 'SELECT * FROM `team`';
@@ -66,10 +66,24 @@ export async function sendDailyNotes() {
             .setFields(list)
             .setTimestamp()
             .setFooter({ text: `${list.length}/${team.cnt}` });
-        webhookClient.send({
-            content: '@everyone',
-            embeds: [embed],
-        });
+
+        if(list.length >= team.cnt) {
+            embed.setTitle("모두가 일간보고서를 작성했어요! 👍");
+            webhookClient.send({
+                embeds: [embed],
+            });
+        }
+        else if (mention) {
+            webhookClient.send({
+                content: "@everyone",
+                embeds: [embed],
+            });
+        }
+        else {
+            webhookClient.send({
+                embeds: [embed],
+            });
+        }
     });
 }
 

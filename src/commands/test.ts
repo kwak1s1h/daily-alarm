@@ -9,9 +9,17 @@ const host = 'ggm.gondr.net';
 export const data = new SlashCommandBuilder()
     .setName("test")
     .setDescription("테스트로 지정한 날자의 일간보고서들을 출력합니다.")
-    .setNameLocalization("ko", "테스트");
+    .setNameLocalization("ko", "테스트")
+    .addBooleanOption(option => {
+        return option.setName("mention")
+                    .setDescription("@everyone 멘션 여부를 결정합니다.")
+                    .setNameLocalization("ko", "멘션")
+                    .setRequired(false);
+    });
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+    let mention: Boolean | null = interaction.options.getBoolean("mention", false);
+    
     let team;
     try {
         const sql = 'SELECT * FROM `team` WHERE `guild` = ?';
@@ -34,8 +42,23 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setFields(list)
             .setTimestamp()
             .setFooter({ text: `${list.length}/${team.cnt}` });
-        webhookClient.send({
-            embeds: [embed],
-        });
+            
+        if(list.length >= team.cnt) {
+            embed.setTitle("모두가 일간보고서를 작성했어요! 👍");
+            webhookClient.send({
+                embeds: [embed],
+            });
+        }
+        else if (mention) {
+            webhookClient.send({
+                content: "@everyone",
+                embeds: [embed],
+            });
+        }
+        else {
+            webhookClient.send({
+                embeds: [embed],
+            });
+        }
     return await interaction.reply({ content: "테스트를 실행했습니다." });
 }
