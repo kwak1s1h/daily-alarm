@@ -3,3 +3,4 @@ node_modules
 webhook-link.json
 token.json
 dist/
+deploy.bat
