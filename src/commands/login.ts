@@ -27,18 +27,20 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const email = interaction.options.getString("email");
     const password = interaction.options.getString("password");
     
-    const res = await axios.post(url, {
-        email, password
-    });
-
-    if(res.status !== 200)
-    {
+    let token: string;
+    try {
+        const res = await axios.post(url, {
+            email, password
+        });
+        token = res.data['access_token'];
+    }
+    catch(err) {
         return interaction.reply({ 
-            content: `로그인을 실패했습니다. ${res.data.message}`,
+            content: `로그인을 실패했습니다. ${err}`,
             ephemeral: true,
         });
     }
-    const token: string = res.data['access_token'];
+
     if(token == undefined)
     {
         return await interaction.reply({ 
