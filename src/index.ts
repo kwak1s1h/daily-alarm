@@ -7,6 +7,7 @@ import { pool } from "./DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
 import axios from "axios";
 import { User } from "./commands/register";
+import { hexToRgb } from "./utils/hexToRGBTuple";
 
 const host = 'ggm.gondr.net';
 export const client = new Client({
@@ -68,10 +69,11 @@ export async function sendDailyNotes(mention: Boolean = true) {
             .setURL(`http://${host}/project/team/${team.id}`)
             .setFields(list)
             .setTimestamp()
-            .setFooter({ text: `${list.length}/${team.cnt}` });
+            .setFooter({ text: `${list.length}/${team.cnt}` })
+            .setColor(hexToRgb(team.color));
 
         if(list.length >= team.cnt) {
-            embed.setTitle("모두가 일간보고서를 작성했어요! 👍");
+            embed.setTitle("모두가 일간보고서를 작성했어요! 👍")
             webhookClient.send({
                 embeds: [embed],
             });

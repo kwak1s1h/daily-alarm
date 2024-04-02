@@ -3,6 +3,7 @@ import { Team, getDailyNotes } from "..";
 import { ChatInputCommandInteraction, SlashCommandBuilder, WebhookClient } from "discord.js";
 import { FieldPacket } from "mysql2";
 import { pool } from "../DB";
+import { hexToRgb } from "../utils/hexToRGBTuple";
 
 const host = 'ggm.gondr.net';
 
@@ -41,7 +42,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setURL(`http://${host}/project/team/${team.id}`)
             .setFields(list)
             .setTimestamp()
-            .setFooter({ text: `${list.length}/${team.cnt}` });
+            .setFooter({ text: `${list.length}/${team.cnt}` })
+            .setColor(hexToRgb(team.color));
             
         if(list.length >= team.cnt) {
             embed.setTitle("모두가 일간보고서를 작성했어요! 👍");

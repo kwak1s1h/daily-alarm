@@ -5,6 +5,7 @@ import { pool } from "../DB";
 import { ErrorPacketParams, QueryError } from "mysql2";
 import { scheduleJob } from "node-schedule";
 import { client, SetBotActivity, Team } from "..";
+import { hexToRgb } from "../utils/hexToRGBTuple";
 
 const url = 'https://ggm.gondr.net/api/team/list';
 
@@ -49,7 +50,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         name: "일간보고서 알림"
     });
 
-    
     const now = new Date(Date.now());
     const res = await axios.get(url, {
         params: {
@@ -71,7 +71,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 { name: "팀장", value: `${team.leader.name}`, inline: true },
                 { name: "알림 채널", value: `<#${targetChannel.id}>` },
                 { name: "알림 멘션", value: mention }
-            ]);
+            ])
+            .setColor(hexToRgb(team.color));
     }
     else {
         embed.setTitle('해당하는 팀을 찾을 수 없습니다.')
@@ -97,7 +98,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     { name: "팀장", value: `${team.leader.name}`, inline: true },
                     { name: "알림 채널", value: `<#${targetChannel.id}>` },
                     { name: "알림 멘션", value: mention }
-                ]);
+                ])
+                .setColor(hexToRgb(team.color));
             return await interaction.reply({ embeds: [embed] });
         }
         embed.setTitle('팀 정보를 등록하는 중 오류가 발생했습니다.')

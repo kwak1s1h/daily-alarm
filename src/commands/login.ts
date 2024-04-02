@@ -9,7 +9,7 @@ const url = 'https://ggm.gondr.net/api/login';
 
 export const data = new SlashCommandBuilder()
     .setName("login")
-    .setDescription("포트폴리오 사이트에서 로그인합니다.")
+    .setDescription("포트폴리오 사이트 계정을 등록합니다.")
     .setNameLocalization("ko", "로그인")
     .addStringOption(option => {
         return option.setName("email")

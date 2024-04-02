@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { Channel, ChannelType, ChatInputCommandInteraction, SlashCommandBuilder, TextChannel } from "discord.js";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { pool } from "../DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
 import { Team } from "..";
@@ -37,7 +37,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         let [rows, fields]: [RowDataPacket[], FieldPacket[]] = await pool.query(sql, values);
         if(rows.length <= 0) {
             return await interaction.reply({
-                content: "이 명령어는 팀 등록이 완료된 디스코드 서버에서만 사용 할 수 있습니다.",
+                content: "이 명령어는 팀 등록이 완료된 본인 팀의 디스코드 서버에서만 사용 할 수 있습니다.",
                 ephemeral: true
             });
         }
@@ -71,6 +71,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
     catch(err) {
         console.log(err);
+        if(isAxiosError(err)) {
+            return await interaction.reply({ content: `일간보고서 작성 중 오류가 발생했습니다. ${err.response}`, ephemeral: true });
+        }
         return await interaction.reply({ content: `일간보고서 작성 중 오류가 발생했습니다. ${err}`, ephemeral: true });
     }
     
