@@ -1,4 +1,4 @@
-import { APIEmbedField, ApplicationCommandType, Client, EmbedBuilder, GatewayIntentBits, WebhookClient } from "discord.js";
+import { ActivityType, APIEmbedField, ApplicationCommandType, Client, ClientUser, EmbedBuilder, GatewayIntentBits, WebhookClient } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
 import { deployCommands } from "./deploy-commands";
@@ -22,7 +22,8 @@ client.once("ready", async () => {
     let guilds = await client.guilds.fetch();
     guilds.forEach(async g => {
         await deployCommands({ guildId: g.id });
-    })
+    });
+    await SetBotActivity(client.user);
 });
 
 client.on("guildCreate", async (guild) => {
@@ -119,4 +120,27 @@ export interface Team extends RowDataPacket {
 export interface DailyNote {
     name: string, // the author of note
     content: string // the content of note
+}
+
+export async function SetBotActivity(user: ClientUser | null) {
+    if(!user) return;
+
+    let userCnt, teamCnt;
+    try {
+        let sql = 'SELECT * FROM `team`';
+        let [rows, fields]: [RowDataPacket[], FieldPacket[]] = await pool.query(sql);
+        teamCnt = rows.length;
+
+        sql = 'SELECT * FROM `user`';
+        [rows, fields] = await pool.query(sql);
+        userCnt = rows.length;
+    }
+    catch(err) {
+        console.log(err);
+        throw err;
+    }
+    user.setActivity({
+        name: `${teamCnt}개의 팀과 ${userCnt}명의 유저가 사용 중입니다.`,
+        type: ActivityType.Custom
+    });
 }

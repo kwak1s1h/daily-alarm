@@ -3,7 +3,7 @@ import { Channel, ChannelType, ChatInputCommandInteraction, SlashCommandBuilder,
 import axios from "axios";
 import { pool } from "../DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
-import { Team } from "..";
+import { client, SetBotActivity, Team } from "..";
 
 const url = 'https://ggm.gondr.net/api/login';
 
@@ -65,6 +65,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             ephemeral: true,
         });
     }
-
+    SetBotActivity(client.user);
     return await interaction.reply({ content: "성공적으로 등록되었습니다.", ephemeral: true });
 }

@@ -3,7 +3,7 @@ import { Channel, ChannelType, ChatInputCommandInteraction, SlashCommandBuilder,
 import axios from "axios";
 import { pool } from "../DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
-import { Team } from "..";
+import { client, SetBotActivity, Team } from "..";
 
 const url = 'https://ggm.gondr.net/api/team/list';
 
@@ -58,6 +58,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setDescription(`${err}`);
         return await interaction.reply({ embeds: [embed] });
     }
-
+    SetBotActivity(client.user);
     return await interaction.reply({ content: "팀 등록이 정상적으로 해제되었습니다!", ephemeral: true });
 }

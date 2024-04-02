@@ -4,7 +4,7 @@ import axios from "axios";
 import { pool } from "../DB";
 import { ErrorPacketParams, QueryError } from "mysql2";
 import { scheduleJob } from "node-schedule";
-import { Team } from "..";
+import { client, SetBotActivity, Team } from "..";
 
 const url = 'https://ggm.gondr.net/api/team/list';
 
@@ -105,6 +105,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         return await interaction.reply({ embeds: [embed] });
     }
 
+    SetBotActivity(client.user);
     return await interaction.reply({ embeds: [embed] });
 }
 
