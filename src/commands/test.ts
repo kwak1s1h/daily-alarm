@@ -51,7 +51,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         }
         else if (mention) {
             webhookClient.send({
-                content: "@everyone",
+                content: team.mention,
                 embeds: [embed],
             });
         }

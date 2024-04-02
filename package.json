@@ -16,7 +16,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": ".\\kill.bat && tsx watch src/index.ts && .\\deploy.bat",
     "start": "node dist/index.js",
     "build": "tsup src/index.ts",
     "deploy": ".\\deploy.bat"

@@ -1,4 +1,4 @@
-import { APIEmbedField, ApplicationCommandType, ChatInputCommandInteraction, Client, EmbedBuilder, GatewayIntentBits, WebhookClient } from "discord.js";
+import { APIEmbedField, ApplicationCommandType, Client, EmbedBuilder, GatewayIntentBits, WebhookClient } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
 import { deployCommands } from "./deploy-commands";
@@ -6,9 +6,10 @@ import { scheduleJob } from "node-schedule";
 import { pool } from "./DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
 import axios from "axios";
+import { User } from "./commands/register";
 
 const host = 'ggm.gondr.net';
-const client = new Client({
+export const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -55,7 +56,8 @@ export async function sendDailyNotes(mention: Boolean = true) {
         registered = rows;
     }
     catch (err) {
-        return;
+        console.log(err);
+        throw err;
     }
     registered.forEach(async team => {
         const list = await getDailyNotes(team, new Date(Date.now()));
@@ -109,6 +111,9 @@ export interface Team extends RowDataPacket {
     guild: string,
     webhook_url: string,
     color: string,
+    channel: string,
+    mention: string,
+    leader: User
 }
 
 export interface DailyNote {
