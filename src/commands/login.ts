@@ -41,7 +41,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const token: string = res.data['access_token'];
     if(token == undefined)
     {
-        return interaction.reply({ 
+        return await interaction.reply({ 
             content: `로그인을 실패했습니다.`,
             ephemeral: true,
         });
@@ -58,7 +58,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
     catch(err) {
         console.log(err);
-        return interaction.reply({ 
+        return await interaction.reply({ 
             content: `로그인을 실패했습니다. ${err}`,
             ephemeral: true,
         });
