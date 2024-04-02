@@ -35,25 +35,25 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         let sql = 'SELECT `id` FROM `team` WHERE `guild` = ?';
         let values: any[] = [interaction.guild.id];
         let [rows, fields]: [RowDataPacket[], FieldPacket[]] = await pool.query(sql, values);
+        if(rows.length <= 0) {
+            return await interaction.reply({
+                content: "이 명령어는 팀 등록이 완료된 디스코드 서버에서만 사용 할 수 있습니다.",
+                ephemeral: true
+            });
+        }
         team = rows[0].id;
 
         sql = 'SELECT `token` FROM `user` WHERE `discord_id` = ?';
         values = [interaction.user.id];
         [rows, fields] = await pool.query(sql, values);
+        if(rows.length <= 0) {
+            return await interaction.reply({
+                content: "로그인이 필요합니다. **/로그인** 명령어로 계정을 등록해주세요.",
+                ephemeral: true
+            });
+        }
         token = rows[0].token;
 
-        if(!team) {
-            return await interaction.reply({
-                content: "팀 정보를 조회 할 수 없습니다.",
-                ephemeral: true
-            });
-        }
-        else if(!token) {
-            return await interaction.reply({
-                content: "사용자 정보를 조회 할 수 없습니다.",
-                ephemeral: true
-            });
-        }
     }
     catch(err) {
         console.log(err);
