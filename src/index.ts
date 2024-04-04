@@ -80,7 +80,7 @@ export async function sendDailyNotes(mention: Boolean = true) {
         }
         else if (mention) {
             webhookClient.send({
-                content: "@everyone",
+                content: team.mention,
                 embeds: [embed],
             });
         }

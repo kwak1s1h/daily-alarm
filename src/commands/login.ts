@@ -53,10 +53,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const expDate = new Date(exp * 1000);
 
     try {
-        const sql = 'INSERT INTO `user`(`id`, `token`, `discord_id`, `exp`) VALUES (?, ?, ?, ?)';
-        const values = [sub, token, interaction.user.id, expDate];
+        let sql = 'INSERT INTO `user`(`id`, `token`, `discord_id`, `exp`) VALUES (?, ?, ?, ?)';
+        let values = [sub, token, interaction.user.id, expDate];
     
-        const [result, fields] = await pool.query(sql, values);
+        let [result, fields] = await pool.query(sql, values);
     }
     catch(err) {
         console.log(err);

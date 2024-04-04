@@ -56,6 +56,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     }
     catch(err) {
+        
         console.log(err);
         return await interaction.reply({ content: `팀 정보 로드 중 오류가 발생했습니다. ${err}`, ephemeral: true });
     }
