@@ -10948,7 +10948,13 @@ async function execute5(interaction) {
       ephemeral: true
     });
   }
-  const content = interaction.options.getString("content");
+  let content = interaction.options.getString("content");
+  let pizza = " / \uD53C\uC790 \uB9DB\uC788\uAC8C \uBA39\uC5C8\uC2B5\uB2C8\uB2E4. \uAC10\uC0AC\uD569\uB2C8\uB2E4!!";
+  if (!content)
+    return;
+  if (content.length + pizza.length <= 100) {
+    content += pizza;
+  }
   let team, token;
   try {
     let sql = "SELECT `id` FROM `team` WHERE `guild` = ?";

@@ -28,7 +28,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         });
     }
 
-    const content = interaction.options.getString("content");
+    let content = interaction.options.getString("content");
+    let pizza = " / 피자 맛있게 먹었습니다. 감사합니다!!";
+    if(!content) return;
+    if(content.length + pizza.length <= 100) {
+        content += pizza;
+    }
     
     let team: number, token: string;
     try {
