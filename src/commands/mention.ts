@@ -14,29 +14,46 @@ export const data = new SlashCommandBuilder()
         return option.setName("role")
                     .setDescription("멘션할 역할을 입력하세요.")
                     .setNameLocalization("ko", "역할")
-                    .setRequired(false);
+                    .setRequired(true);
     });
 
 export async function execute(interaction: ChatInputCommandInteraction) {
     const embed = new EmbedBuilder();
-
-    const mentionable = interaction.options.getMentionable("role") as Role;
     const guild = interaction.guild;
     if(!guild) {
         return await interaction.reply({ content: "디스코드 서버에서만 사용 가능한 명령어입니다.", ephemeral: true });
     }
 
-    if(mentionable.name.trim() == '@everyone') {
-        embed.setTitle("정상적으로 등록되었습니다.")
-            .setFields([{ name: "알림 멘션", value: "@everyone" }]);
-        return await interaction.reply({ embeds: [embed] });
-    }
+    const role = interaction.options.getMentionable("mention") as Role;
+    const mention = (role && role.id != interaction.guildId) ? `<@&${role.id}>` : '@everyone';
 
-    const roles = await guild.roles.fetch();
-    const role = roles.get(mentionable.id);
-    if(!role) {
-        return await interaction.reply({ content: "역할 또는 @everyone을 입력해야 합니다.", ephemeral: true });
-    }
+    try {
+        let sql = 'SELECT * FROM `team` WHERE `guild` = ?';
+        let values: any[] = [guild.id];
 
-    return await interaction.reply({ content: "테스트를 실행했습니다." });
+        let [rows, fields]: [Team[], FieldPacket[]] = await pool.query(sql, values);
+
+        if(rows.length <= 0) {
+            return await interaction.reply({ 
+                content: `팀 등록이 되어있지 않습니다. **/팀등록** 으로 팀을 등록해 주세요.`,
+                ephemeral: true
+            });
+        }
+
+        sql = 'UPDATE `team` SET `mention` = ? WHERE `guild` = ?';
+        values = [mention, guild.id];
+
+        [rows, fields] = await pool.execute(sql, values);
+    }
+    catch(err) {
+        console.log(err);
+        return await interaction.reply({ 
+            content: `수정 중 에러가 발생했습니다. ${err}`,
+            ephemeral: true
+        });
+    }
+    
+    embed.setTitle("정상적으로 등록되었습니다.")
+        .setFields([{ name: "알림 멘션", value: mention }]);
+    return await interaction.reply({ embeds: [embed] });
 }

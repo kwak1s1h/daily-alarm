@@ -36,9 +36,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: ChatInputCommandInteraction) {
     const teamName = interaction.options.getString("team_name");
     const role = interaction.options.getMentionable("mention") as Role;
-    const mention = role ? `<@&${role.id}>` : 'everyone';
-    console.log(role);
-    console.log(mention);
+    const mention = (role && role.id != interaction.guildId) ? `<@&${role.id}>` : '@everyone';
     const embed = new EmbedBuilder();
     const guild = interaction.guild;
     if(!guild) {
