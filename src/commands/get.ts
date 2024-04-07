@@ -48,5 +48,5 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         await webhookClient.send({
             embeds: [embed],
         });
-    return await interaction.reply({});
+    return await interaction.reply({ content: "성공적으로 조회했습니다.", ephemeral: true });
 }
