@@ -8,7 +8,7 @@ import { hexToRgb } from "../utils/hexToRGBTuple";
 const host = 'ggm.gondr.net';
 
 export const data = new SlashCommandBuilder()
-    .setName("getDaily")
+    .setName("get")
     .setDescription("오늘의 일간보고서를 조회합니다.")
     .setNameLocalization("ko", "일간조회");
 
