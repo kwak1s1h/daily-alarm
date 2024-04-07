@@ -4,6 +4,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder, WebhookClient } from 
 import { FieldPacket } from "mysql2";
 import { pool } from "../DB";
 import { hexToRgb } from "../utils/hexToRGBTuple";
+import { num2DayString } from "../utils/date";
 
 const host = 'ggm.gondr.net';
 
@@ -34,7 +35,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const list = await getDailyNotes(team, now);
         const webhookClient = new WebhookClient({ url: team.webhook_url });
         const embed = new EmbedBuilder()
-            .setTitle(`**${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 일간보고서 (클릭 시 이동)**`)
+            .setTitle(`**${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일(${num2DayString(now.getDay())}) 일간보고서 (클릭 시 이동)**`)
             .setURL(`http://${host}/project/team/${team.id}`)
             .setFields(list)
             .setTimestamp()
