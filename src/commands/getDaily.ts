@@ -8,24 +8,19 @@ import { hexToRgb } from "../utils/hexToRGBTuple";
 const host = 'ggm.gondr.net';
 
 export const data = new SlashCommandBuilder()
-    .setName("test")
-    .setDescription("테스트로 지정한 날자의 일간보고서들을 출력합니다.")
-    .setNameLocalization("ko", "테스트")
-    .addBooleanOption(option => {
-        return option.setName("mention")
-                    .setDescription("@everyone 멘션 여부를 결정합니다.")
-                    .setNameLocalization("ko", "멘션")
-                    .setRequired(false);
-    });
+    .setName("getDaily")
+    .setDescription("오늘의 일간보고서를 조회합니다.")
+    .setNameLocalization("ko", "일간조회");
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    let mention: Boolean | null = interaction.options.getBoolean("mention", false);
-    
     let team;
     try {
         const sql = 'SELECT * FROM `team` WHERE `guild` = ?';
         const values: any = [interaction.guildId];
         const [rows, fields]: [Team[], FieldPacket[]] = await pool.execute(sql, values);
+        if(rows.length <= 0) {
+            return await interaction.reply({ content: "팀을 찾을 수 없습니다! 등록을 시도해 주세요." });
+        }
         team = rows[0];
     }
     catch (err) {
@@ -33,12 +28,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         return await interaction.reply({ content: `${err}` });
     }
     if(!team) {
-        return await interaction.reply({ content: "팀을 찾을 수 없습니다! 등록을 시도해 주세요." });
+        return await interaction.reply({ content: `테스트 시도 중 오류가 발생했습니다. ${team}` });
     }
-    const list = await getDailyNotes(team, new Date(Date.now()));
+    const now = new Date(Date.now());
+    const list = await getDailyNotes(team, now);
         const webhookClient = new WebhookClient({ url: team.webhook_url });
         const embed = new EmbedBuilder()
-            .setTitle('**일간보고서를 작성해주세요! (클릭 시 이동)**')
+            .setTitle(`**${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 일간보고서 (클릭 시 이동)**`)
             .setURL(`http://${host}/project/team/${team.id}`)
             .setFields(list)
             .setTimestamp()
@@ -47,20 +43,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             
         if(list.length >= team.cnt) {
             embed.setTitle("모두가 일간보고서를 작성했어요! 👍");
-            webhookClient.send({
-                embeds: [embed],
-            });
         }
-        else if (mention) {
-            webhookClient.send({
-                content: team.mention,
-                embeds: [embed],
-            });
-        }
-        else {
-            webhookClient.send({
-                embeds: [embed],
-            });
-        }
-    return await interaction.reply({ content: "테스트를 실행했습니다." });
+        await webhookClient.send({
+            embeds: [embed],
+        });
+    return;
 }

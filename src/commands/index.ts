@@ -1,6 +1,6 @@
 import * as register from "./register";
 import * as remove from "./remove";
-import * as test from "./test";
+import * as getDaily from "./getDaily";
 import * as login from "./login";
 import * as daily from "./daily";
 import * as logout from "./logout";
@@ -9,7 +9,7 @@ import * as mention from "./mention"
 export const commands = {
     register,
     remove,
-    test,
+    getDaily,
     login,
     daily,
     logout,
