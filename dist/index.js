@@ -10827,51 +10827,43 @@ async function execute2(interaction) {
   return await interaction.reply({ content: "\uD300 \uB4F1\uB85D\uC774 \uC815\uC0C1\uC801\uC73C\uB85C \uD574\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4!", ephemeral: true });
 }
 
-// src/commands/test.ts
-var test_exports = {};
-__export(test_exports, {
+// src/commands/getDaily.ts
+var getDaily_exports = {};
+__export(getDaily_exports, {
   data: () => data3,
   execute: () => execute3
 });
 var import_discord3 = require("discord.js");
 var host = "ggm.gondr.net";
-var data3 = new import_discord3.SlashCommandBuilder().setName("test").setDescription("\uD14C\uC2A4\uD2B8\uB85C \uC9C0\uC815\uD55C \uB0A0\uC790\uC758 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB4E4\uC744 \uCD9C\uB825\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uD14C\uC2A4\uD2B8").addBooleanOption((option) => {
-  return option.setName("mention").setDescription("@everyone \uBA58\uC158 \uC5EC\uBD80\uB97C \uACB0\uC815\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uBA58\uC158").setRequired(false);
-});
+var data3 = new import_discord3.SlashCommandBuilder().setName("getDaily").setDescription("\uC624\uB298\uC758 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC870\uD68C\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uC77C\uAC04\uC870\uD68C");
 async function execute3(interaction) {
-  let mention = interaction.options.getBoolean("mention", false);
   let team;
   try {
     const sql = "SELECT * FROM `team` WHERE `guild` = ?";
     const values = [interaction.guildId];
     const [rows, fields] = await pool.execute(sql, values);
+    if (rows.length <= 0) {
+      return await interaction.reply({ content: "\uD300\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4! \uB4F1\uB85D\uC744 \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694." });
+    }
     team = rows[0];
   } catch (err) {
     console.log(err);
     return await interaction.reply({ content: `${err}` });
   }
   if (!team) {
-    return await interaction.reply({ content: "\uD300\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4! \uB4F1\uB85D\uC744 \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694." });
+    return await interaction.reply({ content: `\uD14C\uC2A4\uD2B8 \uC2DC\uB3C4 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4. ${team}` });
   }
-  const list = await getDailyNotes(team, new Date(Date.now()));
+  const now = new Date(Date.now());
+  const list = await getDailyNotes(team, now);
   const webhookClient = new import_discord3.WebhookClient({ url: team.webhook_url });
-  const embed = new EmbedBuilder().setTitle("**\uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC791\uC131\uD574\uC8FC\uC138\uC694! (\uD074\uB9AD \uC2DC \uC774\uB3D9)**").setURL(`http://${host}/project/team/${team.id}`).setFields(list).setTimestamp().setFooter({ text: `${list.length}/${team.cnt}` }).setColor(hexToRgb(team.color));
+  const embed = new EmbedBuilder().setTitle(`**${now.getFullYear()}\uB144 ${now.getMonth() + 1}\uC6D4 ${now.getDate()}\uC77C \uC77C\uAC04\uBCF4\uACE0\uC11C (\uD074\uB9AD \uC2DC \uC774\uB3D9)**`).setURL(`http://${host}/project/team/${team.id}`).setFields(list).setTimestamp().setFooter({ text: `${list.length}/${team.cnt}` }).setColor(hexToRgb(team.color));
   if (list.length >= team.cnt) {
     embed.setTitle("\uBAA8\uB450\uAC00 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC791\uC131\uD588\uC5B4\uC694! \u{1F44D}");
-    webhookClient.send({
-      embeds: [embed]
-    });
-  } else if (mention) {
-    webhookClient.send({
-      content: team.mention,
-      embeds: [embed]
-    });
-  } else {
-    webhookClient.send({
-      embeds: [embed]
-    });
   }
-  return await interaction.reply({ content: "\uD14C\uC2A4\uD2B8\uB97C \uC2E4\uD589\uD588\uC2B5\uB2C8\uB2E4." });
+  await webhookClient.send({
+    embeds: [embed]
+  });
+  return;
 }
 
 // src/commands/login.ts
@@ -10949,12 +10941,8 @@ async function execute5(interaction) {
     });
   }
   let content = interaction.options.getString("content");
-  let pizza = " / \uD53C\uC790 \uB9DB\uC788\uAC8C \uBA39\uC5C8\uC2B5\uB2C8\uB2E4. \uAC10\uC0AC\uD569\uB2C8\uB2E4!!";
   if (!content)
     return;
-  if (content.length + pizza.length <= 100) {
-    content += pizza;
-  }
   let team, token;
   try {
     let sql = "SELECT `id` FROM `team` WHERE `guild` = ?";
@@ -11080,7 +11068,7 @@ async function execute7(interaction) {
 var commands = {
   register: register_exports,
   remove: remove_exports,
-  test: test_exports,
+  getDaily: getDaily_exports,
   login: login_exports,
   daily: daily_exports,
   logout: logout_exports,
