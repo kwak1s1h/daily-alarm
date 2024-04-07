@@ -47,5 +47,5 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         await webhookClient.send({
             embeds: [embed],
         });
-    return;
+    return await interaction.reply({});
 }
