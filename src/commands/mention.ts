@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
     .setName("mention")
     .setDescription("멘션할 역할을 수정합니다.")
     .setNameLocalization("ko", "멘션")
-    .addBooleanOption(option => {
+    .addMentionableOption(option => {
         return option.setName("role")
                     .setDescription("멘션할 역할을 입력하세요.")
                     .setNameLocalization("ko", "역할")

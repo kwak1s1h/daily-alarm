@@ -1,4 +1,4 @@
-import { ActivityType, APIEmbedField, ApplicationCommandType, Client, ClientUser, EmbedBuilder, GatewayIntentBits, Guild, WebhookClient } from "discord.js";
+import { ActivityType, APIEmbedField, ApplicationCommandType, Client, ClientUser, EmbedBuilder, GatewayIntentBits, Guild, REST, Routes, WebhookClient } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
 import { deployCommands } from "./deploy-commands";
@@ -21,10 +21,10 @@ export const client = new Client({
 client.once("ready", async () => {
     console.log("Discord bot is ready! 🤖");
     let guilds = await client.guilds.fetch();
+    await SetBotActivity(client.user);
     guilds.forEach(async g => {
         await deployCommands({ guild: await g.fetch(), guildId: g.id });
     });
-    await SetBotActivity(client.user);
 });
 
 client.on("guildCreate", async (guild) => {
