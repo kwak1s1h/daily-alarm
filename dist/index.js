@@ -10827,15 +10827,31 @@ async function execute2(interaction) {
   return await interaction.reply({ content: "\uD300 \uB4F1\uB85D\uC774 \uC815\uC0C1\uC801\uC73C\uB85C \uD574\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4!", ephemeral: true });
 }
 
-// src/commands/getDaily.ts
-var getDaily_exports = {};
-__export(getDaily_exports, {
+// src/commands/get.ts
+var get_exports = {};
+__export(get_exports, {
   data: () => data3,
   execute: () => execute3
 });
 var import_discord3 = require("discord.js");
+
+// src/utils/date.ts
+function num2DayString(value) {
+  return dayDictionary[value];
+}
+var dayDictionary = {
+  0: "\uC77C",
+  1: "\uC6D4",
+  2: "\uD654",
+  3: "\uC218",
+  4: "\uBAA9",
+  5: "\uAE08",
+  6: "\uD1A0"
+};
+
+// src/commands/get.ts
 var host = "ggm.gondr.net";
-var data3 = new import_discord3.SlashCommandBuilder().setName("getDaily").setDescription("\uC624\uB298\uC758 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC870\uD68C\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uC77C\uAC04\uC870\uD68C");
+var data3 = new import_discord3.SlashCommandBuilder().setName("get").setDescription("\uC624\uB298\uC758 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC870\uD68C\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uC77C\uAC04\uC870\uD68C");
 async function execute3(interaction) {
   let team;
   try {
@@ -10856,14 +10872,14 @@ async function execute3(interaction) {
   const now = new Date(Date.now());
   const list = await getDailyNotes(team, now);
   const webhookClient = new import_discord3.WebhookClient({ url: team.webhook_url });
-  const embed = new EmbedBuilder().setTitle(`**${now.getFullYear()}\uB144 ${now.getMonth() + 1}\uC6D4 ${now.getDate()}\uC77C \uC77C\uAC04\uBCF4\uACE0\uC11C (\uD074\uB9AD \uC2DC \uC774\uB3D9)**`).setURL(`http://${host}/project/team/${team.id}`).setFields(list).setTimestamp().setFooter({ text: `${list.length}/${team.cnt}` }).setColor(hexToRgb(team.color));
+  const embed = new EmbedBuilder().setTitle(`**${now.getFullYear()}\uB144 ${now.getMonth() + 1}\uC6D4 ${now.getDate()}\uC77C(${num2DayString(now.getDay())}) \uC77C\uAC04\uBCF4\uACE0\uC11C (\uD074\uB9AD \uC2DC \uC774\uB3D9)**`).setURL(`http://${host}/project/team/${team.id}`).setFields(list).setTimestamp().setFooter({ text: `${list.length}/${team.cnt}` }).setColor(hexToRgb(team.color));
   if (list.length >= team.cnt) {
     embed.setTitle("\uBAA8\uB450\uAC00 \uC77C\uAC04\uBCF4\uACE0\uC11C\uB97C \uC791\uC131\uD588\uC5B4\uC694! \u{1F44D}");
   }
   await webhookClient.send({
     embeds: [embed]
   });
-  return;
+  return await interaction.reply({ content: "\uC131\uACF5\uC801\uC73C\uB85C \uC870\uD68C\uD588\uC2B5\uB2C8\uB2E4.", ephemeral: true });
 }
 
 // src/commands/login.ts
@@ -11068,7 +11084,7 @@ async function execute7(interaction) {
 var commands = {
   register: register_exports,
   remove: remove_exports,
-  getDaily: getDaily_exports,
+  get: get_exports,
   login: login_exports,
   daily: daily_exports,
   logout: logout_exports,
@@ -11079,7 +11095,7 @@ var commands = {
 var import_discord8 = require("discord.js");
 var commandsData = Object.values(commands).map((command) => command.data);
 var rest = new import_discord8.REST({ version: "10" }).setToken(config.DISCORD_TOKEN);
-async function deployCommands({ guildId }) {
+async function deployCommands({ guild, guildId }) {
   try {
     console.log("Started refreshing application (/) commands.");
     await rest.put(
@@ -11088,7 +11104,7 @@ async function deployCommands({ guildId }) {
         body: commandsData
       }
     );
-    console.log("Successfully reloaded application (/) commands.");
+    console.log(`Successfully reloaded application (/) commands. Guild: ${guild.name}`);
   } catch (error) {
     console.error(error);
   }
@@ -11109,12 +11125,12 @@ client.once("ready", async () => {
   console.log("Discord bot is ready! \u{1F916}");
   let guilds = await client.guilds.fetch();
   guilds.forEach(async (g2) => {
-    await deployCommands({ guildId: g2.id });
+    await deployCommands({ guild: await g2.fetch(), guildId: g2.id });
   });
   await SetBotActivity(client.user);
 });
 client.on("guildCreate", async (guild) => {
-  await deployCommands({ guildId: guild.id });
+  await deployCommands({ guild: await guild.fetch(), guildId: guild.id });
 });
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) {
