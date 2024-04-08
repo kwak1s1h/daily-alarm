@@ -5,7 +5,7 @@ import { pool } from "../DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
 import { client, SetBotActivity, Team } from "..";
 
-const url = 'https://ggm.gondr.net/api/login';
+const url = 'https://ggm.gondr.net/api';
 
 export const data = new SlashCommandBuilder()
     .setName("login")
@@ -27,9 +27,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const email = interaction.options.getString("email");
     const password = interaction.options.getString("password");
     
-    let token: string;
+    let token: string, userName: string;
     try {
-        const res = await axios.post(url, {
+        let res = await axios.post(url + "/login", {
             email, password
         });
         token = res.data['access_token'];
@@ -53,8 +53,22 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const expDate = new Date(exp * 1000);
 
     try {
-        let sql = 'INSERT INTO `user`(`id`, `token`, `discord_id`, `exp`) VALUES (?, ?, ?, ?)';
-        let values = [sub, token, interaction.user.id, expDate];
+        let res = await axios.get(url + `/user?id=${sub}`, {
+            headers: { "Authorization" : `Bearer ${token}` }
+        });
+
+        userName = res.data['name'];
+    }
+    catch(err) {
+        return interaction.reply({ 
+            content: `로그인을 실패했습니다. ${err}`,
+            ephemeral: true,
+        });
+    }
+
+    try {
+        let sql = 'INSERT INTO `user`(`id`, `name`, `token`, `discord_id`, `exp`) VALUES (?, ?, ?, ?, ?)';
+        let values = [sub, userName, token, interaction.user.id, expDate];
     
         let [result, fields] = await pool.query(sql, values);
     }

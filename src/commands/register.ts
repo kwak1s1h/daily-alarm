@@ -58,7 +58,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const teamList: Team[] = res.data.list;
     const team = teamList.find(t => t.name == teamName);
     
-    
     if (team) {
         team.channel = targetChannel.id;
         team.mention = mention;
@@ -75,6 +74,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     else {
         embed.setTitle('해당하는 팀을 찾을 수 없습니다.')
             .setDescription(`https://ggm.gondr.net/project 에서 팀명을 정확하게 찾아 기입해 주세요.`);
+        await webhook.delete();
         return await interaction.reply({ embeds: [embed] });
     }
 
@@ -87,7 +87,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     catch(err) {
         const error = err as any;
         if(error.errno === 1062) {
-
             // TODO: Load registered team data and render
             embed.setTitle('이미 등록되었습니다.')
                 .setFields([
@@ -98,10 +97,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     { name: "알림 멘션", value: mention }
                 ])
                 .setColor(hexToRgb(team.color));
+            await webhook.delete();
             return await interaction.reply({ embeds: [embed] });
         }
         embed.setTitle('팀 정보를 등록하는 중 오류가 발생했습니다.')
             .setDescription(error.message);
+        await webhook.delete();
         return await interaction.reply({ embeds: [embed] });
     }
 
