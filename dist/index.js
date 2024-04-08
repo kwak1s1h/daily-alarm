@@ -11045,7 +11045,7 @@ __export(mention_exports, {
   execute: () => execute7
 });
 var import_discord7 = require("discord.js");
-var data7 = new import_discord7.SlashCommandBuilder().setName("mention").setDescription("\uBA58\uC158\uD560 \uC5ED\uD560\uC744 \uC218\uC815\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uBA58\uC158").addBooleanOption((option) => {
+var data7 = new import_discord7.SlashCommandBuilder().setName("mention").setDescription("\uBA58\uC158\uD560 \uC5ED\uD560\uC744 \uC218\uC815\uD569\uB2C8\uB2E4.").setNameLocalization("ko", "\uBA58\uC158").addMentionableOption((option) => {
   return option.setName("role").setDescription("\uBA58\uC158\uD560 \uC5ED\uD560\uC744 \uC785\uB825\uD558\uC138\uC694.").setNameLocalization("ko", "\uC5ED\uD560").setRequired(true);
 });
 async function execute7(interaction) {
@@ -11097,7 +11097,7 @@ var commandsData = Object.values(commands).map((command) => command.data);
 var rest = new import_discord8.REST({ version: "10" }).setToken(config.DISCORD_TOKEN);
 async function deployCommands({ guild, guildId }) {
   try {
-    console.log("Started refreshing application (/) commands.");
+    console.log(`Started refreshing application (/) commands. Guild: ${guild.name}`);
     await rest.put(
       import_discord8.Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, guildId),
       {
@@ -11124,10 +11124,10 @@ var client = new import_discord9.Client({
 client.once("ready", async () => {
   console.log("Discord bot is ready! \u{1F916}");
   let guilds = await client.guilds.fetch();
+  await SetBotActivity(client.user);
   guilds.forEach(async (g2) => {
     await deployCommands({ guild: await g2.fetch(), guildId: g2.id });
   });
-  await SetBotActivity(client.user);
 });
 client.on("guildCreate", async (guild) => {
   await deployCommands({ guild: await guild.fetch(), guildId: guild.id });
