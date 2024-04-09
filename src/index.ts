@@ -1,13 +1,14 @@
 import { ActivityType, APIEmbedField, ApplicationCommandType, Client, ClientUser, EmbedBuilder, GatewayIntentBits, Guild, REST, Routes, WebhookClient } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
-import { deployCommands } from "./deploy-commands";
+import { deployCommands, devDeployCommands } from "./deploy-commands";
 import { scheduleJob } from "node-schedule";
 import { pool } from "./DB";
 import { FieldPacket, RowDataPacket } from "mysql2";
 import axios from "axios";
 import { User } from "./commands/register";
 import { hexToRgb } from "./utils/hexToRGBTuple";
+import { devCommands } from "./commands/dev";
 
 const host = 'ggm.gondr.net';
 export const client = new Client({
@@ -23,7 +24,12 @@ client.once("ready", async () => {
     let guilds = await client.guilds.fetch();
     await SetBotActivity(client.user);
     guilds.forEach(async g => {
-        await deployCommands({ guild: await g.fetch(), guildId: g.id });
+        if(g.id !== config.DEV_GUILD) {
+            await deployCommands({ guild: await g.fetch(), guildId: g.id });
+        }
+        else {
+            await devDeployCommands({ guild: await g.fetch(), guildId: g.id });
+        }
     });
 });
 
@@ -39,8 +45,15 @@ client.on("interactionCreate", async (interaction) => {
         return;
     }
     const { commandName } = interaction;
+
+    if(interaction.guildId == config.DEV_GUILD) {
+        if (devCommands[commandName as keyof typeof devCommands]) {
+            devCommands[commandName as keyof typeof devCommands].execute(interaction);
+            return;
+        }
+    }
+
     if (commands[commandName as keyof typeof commands]) {
-        console.log(commandName);    
         commands[commandName as keyof typeof commands].execute(interaction);
     }
 });
