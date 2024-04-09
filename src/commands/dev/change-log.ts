@@ -25,7 +25,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         oAuth2Guilds.forEach(async g => guilds.push(await g.fetch()));
 
         guilds.forEach(async guild => {
-            await guild.systemChannel?.send({ content: text });
+            if(guild.publicUpdatesChannel != null) {
+                await guild.publicUpdatesChannel.send({ content: text });
+            }
+            else {
+                await guild.systemChannel?.send({ content: text });
+            }
         });
     }
     catch(err) {
