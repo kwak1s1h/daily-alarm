@@ -59,7 +59,7 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 scheduleJob("20 20 * * 1-5", () => sendDailyNotes());
-scheduleJob("55 23 * * 1-5", () => sendDailyNotes());
+scheduleJob("50 23 * * 1-5", () => sendDailyNotes());
 
 client.login(config.DISCORD_TOKEN);
 
