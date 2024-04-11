@@ -43,7 +43,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     }
                     let target = await guild.channels.fetch(rows[0].channel);
                     if(target && target.type == ChannelType.GuildText) {
-                        target.send({ content: text });
+                        await target.send({ content: text });
                     }
                 }
                 catch(err) {
