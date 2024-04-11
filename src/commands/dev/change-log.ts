@@ -1,7 +1,9 @@
 import axios from "axios";
-import { ChatInputCommandInteraction, Guild, SlashCommandBuilder } from "discord.js";
+import { ChannelType, ChatInputCommandInteraction, Guild, SlashCommandBuilder } from "discord.js";
 import { client } from "../..";
 import { config } from "../../config";
+import { pool } from "../../DB";
+import { FieldPacket, RowDataPacket } from "mysql2";
 
 export const data = new SlashCommandBuilder()
     .setName("change_log")
@@ -28,8 +30,20 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             if(guild.publicUpdatesChannel != null) {
                 await guild.publicUpdatesChannel.send({ content: text });
             }
+            else if(guild.systemChannel) {
+                await guild.systemChannel.send({ content: text });
+            }
             else {
-                await guild.systemChannel?.send({ content: text });
+                let sql = 'SELECT `channel` FROM `team` WHERE `guild` = ?';
+                let values = [guild.id];
+                let [rows, data]: [RowDataPacket[], FieldPacket[]] = await pool.query(sql, values);
+                if(rows.length <= 0) {
+                    throw new Error("팀을 찾을 수 없습니다.");
+                }
+                let target = await guild.channels.fetch(rows[0].channel);
+                if(target && target.type == ChannelType.GuildText) {
+                    target.send({ content: text });
+                }
             }
         });
     }
