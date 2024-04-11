@@ -74,7 +74,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     catch(err) {
         console.log(err);
         if(isAxiosError(err)) {
-            return await interaction.reply({ content: `일간보고서 작성 요청 중 오류가 발생했습니다. ${err.response?.data}`, ephemeral: true });
+            return await interaction.reply({ content: `일간보고서 작성 요청 중 오류가 발생했습니다. ${JSON.stringify(err.response?.data)}`, ephemeral: true });
         }
         return await interaction.reply({ content: `일간보고서 작성 중 오류가 발생했습니다. ${err}`, ephemeral: true });
     }
