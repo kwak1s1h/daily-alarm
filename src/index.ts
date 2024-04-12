@@ -24,7 +24,7 @@ client.once("ready", async () => {
     let guilds = await client.guilds.fetch();
     await SetBotActivity(client.user);
     guilds.forEach(async g => {
-        if(g.id !== config.DEV_GUILD) {
+        if (g.id !== config.DEV_GUILD) {
             await deployCommands({ guild: await g.fetch(), guildId: g.id });
         }
         else {
@@ -46,7 +46,7 @@ client.on("interactionCreate", async (interaction) => {
     }
     const { commandName } = interaction;
 
-    if(interaction.guildId == config.DEV_GUILD) {
+    if (interaction.guildId == config.DEV_GUILD) {
         if (devCommands[commandName as keyof typeof devCommands]) {
             devCommands[commandName as keyof typeof devCommands].execute(interaction);
             return;
@@ -60,6 +60,7 @@ client.on("interactionCreate", async (interaction) => {
 
 scheduleJob("20 20 * * 1-5", () => sendDailyNotes());
 scheduleJob("50 23 * * 1-5", () => sendDailyNotes());
+scheduleJob("30 15 * * 5", () => sendDailyNotes());
 
 client.login(config.DISCORD_TOKEN);
 
@@ -85,7 +86,7 @@ export async function sendDailyNotes(mention: Boolean = true) {
             .setFooter({ text: `${list.length}/${team.cnt}` })
             .setColor(hexToRgb(team.color));
 
-        if(list.length >= team.cnt) {
+        if (list.length >= team.cnt) {
             embed.setTitle("모두가 일간보고서를 작성했어요! 👍")
             webhookClient.send({
                 embeds: [embed],
@@ -108,15 +109,15 @@ export async function sendDailyNotes(mention: Boolean = true) {
 
 export async function getDailyNotes(team: Team, t: Date): Promise<APIEmbedField[]> {
     let page = await getPage(team, t);
-	let list = page.data.list;
+    let list = page.data.list;
     return list.map((note: DailyNote) => {
         return { name: note.name, value: note.content };
-	});
+    });
 }
 
 export async function getPage(team: Team, t: Date) {
     return await axios.get(`http://${host}/api/team/record/daily?team=${team.id}&start_day=${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`, {
-        headers: { "Authorization" : `Bearer ${config.GGM_TOKEN}` }
+        headers: { "Authorization": `Bearer ${config.GGM_TOKEN}` }
     });
 }
 
@@ -138,7 +139,7 @@ export interface DailyNote {
 }
 
 export async function SetBotActivity(user: ClientUser | null) {
-    if(!user) return;
+    if (!user) return;
 
     let userCnt, teamCnt;
     try {
@@ -150,7 +151,7 @@ export async function SetBotActivity(user: ClientUser | null) {
         [rows, fields] = await pool.query(sql);
         userCnt = rows.length;
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         throw err;
     }
