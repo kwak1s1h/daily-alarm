@@ -60,7 +60,7 @@ client.on("interactionCreate", async (interaction) => {
 
 scheduleJob("20 20 * * 1-5", () => sendDailyNotes());
 scheduleJob("50 23 * * 1-5", () => sendDailyNotes());
-scheduleJob("30 15 * * 5", () => sendDailyNotes());
+scheduleJob("25 15 * * 5", () => sendDailyNotes());
 
 client.login(config.DISCORD_TOKEN);
 
