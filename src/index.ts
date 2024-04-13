@@ -88,18 +88,18 @@ export async function sendDailyNotes(mention: Boolean = true) {
 
         if (list.length >= team.cnt) {
             embed.setTitle("모두가 일간보고서를 작성했어요! 👍")
-            webhookClient.send({
+            await webhookClient.send({
                 embeds: [embed],
             });
         }
         else if (mention) {
-            webhookClient.send({
+            await webhookClient.send({
                 content: team.mention,
                 embeds: [embed],
             });
         }
         else {
-            webhookClient.send({
+            await webhookClient.send({
                 embeds: [embed],
             });
         }
