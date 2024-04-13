@@ -1,5 +1,5 @@
-import * as change_log from "./change-log"
+import * as changeLog from "./changeLog";
 
 export const devCommands = {
-    change_log
+    changeLog,
 }
