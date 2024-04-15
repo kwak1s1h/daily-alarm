@@ -7,6 +7,8 @@ import axios from 'axios';
 import { config } from '../../config';
 
 export const data = new SlashCommandBuilder()
+    .setName('reload_teams')
+    .setDescription('reload all team\'s data');
 
 export async function execute(interaction: ChatInputCommandInteraction) {
     try {
