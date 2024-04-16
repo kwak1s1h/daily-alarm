@@ -1,9 +1,9 @@
-import * as changeLog from "./changeLog";
-import * as sendAll from "./sendAll";
-import * as reloadTeams from "./reloadTeams";
+import * as change_log from "./change-log";
+import * as send_all from "./send-all";
+import * as reload_teams from "./reload-teams";
 
 export const devCommands = {
-    changeLog,
-    sendAll,
-    reloadTeams,
+    change_log,
+    send_all,
+    reload_teams,
 }

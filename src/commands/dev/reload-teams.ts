@@ -11,10 +11,12 @@ export const data = new SlashCommandBuilder()
     .setDescription('reload all team\'s data');
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+    console.log('Start reload all team\'s Info');
     try {
         let sql = 'SELECT * FROM `team`';
         let [teams, fields]: [Team[], FieldPacket[]] = await pool.query(sql);
 
+        console.log(`SQL Query Executed. Team: ${teams.length}, SQL: ${sql}`);
         for(let i = 0; i < teams.length; i++) {
             const team = teams[i];
             const url = TeamInfoDto.url(team.id);
@@ -24,10 +26,14 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 });
 
                 const teamInfo: TeamInfoDto = res.data;
+                console.log(`Team ${teamInfo.team?.name}:${teamInfo.team?.id} loaded. URL: ${url}`);    
+
                 sql = 'UPDATE `team` SET `cnt` = ?, `color` = ? WHERE `id` = ?';
 
                 let values = [teamInfo.members?.length, teamInfo.team?.color, team.id];
                 let [result, fields]: [ResultSetHeader, FieldPacket[]] = await pool.execute(sql, values); 
+
+                console.log(`SQL Query Executed. Result: ${result.info}, SQL: ${sql}`);
             }
             catch (err) {
                 console.log(err);
