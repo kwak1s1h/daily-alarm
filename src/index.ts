@@ -45,10 +45,8 @@ client.on("interactionCreate", async (interaction) => {
         return;
     }
     const { commandName } = interaction;
-    console.log(commandName);
 
     if (interaction.guildId == config.DEV_GUILD) {
-        console.log(`dev command ${commandName}`);
         if (devCommands[commandName as keyof typeof devCommands]) {
             devCommands[commandName as keyof typeof devCommands].execute(interaction);
             return;

@@ -45,5 +45,5 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         console.log(err);
         return await interaction.reply({ content: `${err}` });
     }
-    return await interaction.reply({ content: "called." });
+    return await interaction.reply({ content: "All team's data reloaded." });
 }
