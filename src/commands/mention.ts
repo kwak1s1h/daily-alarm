@@ -25,7 +25,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
 
     const role = interaction.options.getMentionable("mention") as Role;
-    const mention = (role && role.id != interaction.guildId) ? `<@&${role.id}>` : '@everyone';
+    const mention = role ? `<@&${role.id}>` : '@everyone';
 
     try {
         let sql = 'SELECT * FROM `team` WHERE `guild` = ?';

@@ -9,9 +9,21 @@ export const data = new SlashCommandBuilder()
                      .setDescription("sendDailyNotes()'s param")
                      .setRequired(false);
     })
+    .addStringOption(option => {
+        return option.setName("message")
+                     .setDescription("message content")
+                     .setRequired(false);
+    })
 
 export async function execute(interaction: ChatInputCommandInteraction) {
     const mention = interaction.options.getBoolean("mention", false) ?? true;
-    await sendDailyNotes(mention);
+    let message = interaction.options.getString("message", false);
+    if(message == null) {
+        await sendDailyNotes(mention);
+    }
+    else {
+        await sendDailyNotes(mention, message);
+    }
+
     return await interaction.reply({ content: "sendDailyNotes() method called." });
 }

@@ -1,4 +1,4 @@
-import { ActivityType, APIEmbedField, ApplicationCommandType, Client, ClientUser, EmbedBuilder, GatewayIntentBits, Guild, REST, Routes, WebhookClient } from "discord.js";
+import { ActivityType, APIEmbedField, ApplicationCommandType, ChannelType, Client, ClientUser, EmbedBuilder, GatewayIntentBits, Guild, Partials, REST, Routes, WebhookClient } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
 import { deployCommands, devDeployCommands } from "./deploy-commands";
@@ -14,9 +14,14 @@ const host = 'ggm.gondr.net';
 export const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.DirectMessages
+        GatewayIntentBits.DirectMessages,
     ],
+    partials: [
+        Partials.Channel
+    ]
 });
 
 client.once("ready", async () => {
@@ -36,6 +41,13 @@ client.once("ready", async () => {
 client.on("guildCreate", async (guild) => {
     await deployCommands({ guild: await guild.fetch(), guildId: guild.id });
 });
+
+client.on("messageCreate", async (message) => {
+    if(message.author.id !== client.user?.id && message.channel.type == ChannelType.DM) {
+        console.log(`DM from ${message.author.username}: ${message.content}`);
+        message.reply({ content: "ㅗ", allowedMentions: { repliedUser: false } });
+    }
+})
 
 client.on("interactionCreate", async (interaction) => {
     if (!interaction.isCommand()) {
@@ -62,9 +74,12 @@ scheduleJob("20 20 * * 1-5", () => sendDailyNotes());
 scheduleJob("50 23 * * 1-5", () => sendDailyNotes());
 scheduleJob("20 15 * * 5", () => sendDailyNotes());
 
+//TODO: 솔플 주간알람
+// scheduleJob("00 22 * * 5", () => sendWeeklyResult());
+
 client.login(config.DISCORD_TOKEN);
 
-export async function sendDailyNotes(mention: Boolean = true) {
+export async function sendDailyNotes(mention: Boolean = true, content?: string) {
     let registered;
     try {
         const sql = 'SELECT * FROM `team`';
@@ -89,17 +104,19 @@ export async function sendDailyNotes(mention: Boolean = true) {
         if (list.length >= team.cnt) {
             embed.setTitle("모두가 일간보고서를 작성했어요! 👍")
             await webhookClient.send({
+                content,
                 embeds: [embed],
             });
         }
         else if (mention) {
             await webhookClient.send({
-                content: team.mention,
+                content: `${team.mention} ${content}`,
                 embeds: [embed],
             });
         }
         else {
             await webhookClient.send({
+                content,
                 embeds: [embed],
             });
         }

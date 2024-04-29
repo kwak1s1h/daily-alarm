@@ -26,7 +26,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 });
 
                 const teamInfo: TeamInfoDto = res.data;
-                console.log(`Team ${teamInfo.team?.name}:${teamInfo.team?.id} loaded. URL: ${url}`);    
+                console.log(`Team ${teamInfo.team?.name}:${teamInfo.team?.id} loaded. URL: ${url}`);
 
                 sql = 'UPDATE `team` SET `cnt` = ?, `color` = ? WHERE `id` = ?';
 
