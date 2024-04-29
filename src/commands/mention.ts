@@ -24,8 +24,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         return await interaction.reply({ content: "디스코드 서버에서만 사용 가능한 명령어입니다.", ephemeral: true });
     }
 
-    const role = interaction.options.getMentionable("mention") as Role;
+    const role = interaction.options.getMentionable("role", true) as Role;
     const mention = role ? `<@&${role.id}>` : '@everyone';
+    console.log(role);
+    console.log(mention);
 
     try {
         let sql = 'SELECT * FROM `team` WHERE `guild` = ?';
