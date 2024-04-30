@@ -90,6 +90,9 @@ export async function sendDailyNotes(mention: Boolean = true, content?: string) 
         console.log(err);
         throw err;
     }
+    if(!content) {
+        content = '';
+    }
     registered.forEach(async team => {
         const list = await getDailyNotes(team, new Date(Date.now()));
         const webhookClient = new WebhookClient({ url: team.webhook_url });
