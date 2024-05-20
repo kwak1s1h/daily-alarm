@@ -39,8 +39,8 @@ export default class DailyReport extends Command {
         ephemeral: true,
       });
     }
-    const now = GGMRest.Instance.get<ServerTimeDto>(Routes.serverNow());
-    const res = GGMRest.Instance.post<DailyWriteDto>(Routes.daily());
+    const now = await GGMRest.Instance.get<ServerTimeDto>(Routes.serverNow());
+    const res = await GGMRest.Instance.post<DailyWriteDto>(Routes.daily());
   }
 
 }

@@ -1,4 +1,4 @@
-import axios, {AxiosInstance, AxiosRequestConfig, isAxiosError} from "axios";
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, isAxiosError} from "axios";
 import {TeamInfoDto} from "../dto/TeamInfoDto";
 
 export class GGMRest {
@@ -19,22 +19,26 @@ export class GGMRest {
     });
   }
 
-  async get<T>(url: string, config?: AxiosRequestConfig) {
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T | AxiosError> {
     try {
       const res = await axios.get(url, config);
       return res.data as T;
     }
     catch(err) {
+      if(isAxiosError(err))
+        return err;
       throw err;
     }
   }
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig) {
+  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T | AxiosError> {
     try {
       const res = await axios.post(url, data, config);
       return res.data as T;
     }
     catch(err) {
+      if(isAxiosError(err))
+        return err;
       throw err;
     }
   }

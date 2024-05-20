@@ -5,9 +5,9 @@ import {CommandManager} from "./CommandManager";
 import axios from "axios";
 import {Command} from "./Command";
 import {GGMRest} from "./util/GGMRest";
+import {LoginResDto} from "./dto/LoginResDto";
 import Express from "express";
 import https from "node:https";
-import path from "node:path";
 import fs from "fs/promises";
 
 async function main() {
@@ -22,6 +22,13 @@ async function main() {
   GGMRest.Instance = new GGMRest(config.GGM_API_TOKEN, 'ggm.gondr.net');
 
   const app = Express();
+
+  app.post('/', async (req, res) => {
+    const { email, password, discord_id } = req.body;
+    let loginRes = await GGMRest.Instance.post<LoginResDto>('/api/login', {email, password}) as LoginResDto;
+    res.status(200).redirect("https://devseok.com/project/comp");
+  });
+
   const options: https.ServerOptions = {
     key: await fs.readFile(config.HTTPS_KEY_PATH),
     cert: await fs.readFile(config.HTTPS_CERT_PATH),
