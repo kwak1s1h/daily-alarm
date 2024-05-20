@@ -1,0 +1,29 @@
+{
+  "name": "daily-alarm-v3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "ts-node src/Test.ts",
+    "start": "set NODE_ENV=development&&nodemon --exec \\\"ts-node\\\" src/Index.ts -e ts,env"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "discord.js": "^14.15.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7"
+  }
+}

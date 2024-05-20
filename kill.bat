@@ -1,0 +1,1 @@
+ssh -t server "sudo systemctl stop ggm-project-manager"

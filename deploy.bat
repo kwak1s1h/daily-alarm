@@ -1,0 +1,2 @@
+scp -P 9202 .env remote@devseok.com:~/daily-alarm/.env
+ssh -t server "cd ~/daily-alarm ; sudo systemctl stop ggm-project-manager && git pull && npm run build && sudo systemctl start ggm-project-manager && systemctl status ggm-project-manager"

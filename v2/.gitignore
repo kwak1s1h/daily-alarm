@@ -1,0 +1,6 @@
+node_modules
+.env
+webhook-link.json
+token.json
+dist
+*.bat
