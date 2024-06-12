@@ -131,7 +131,7 @@ export async function getDailyNotes(team: Team, t: Date): Promise<APIEmbedField[
     let page = await getPage(team, t);
     let list = page.data.list;
     return list.map((note: DailyNote) => {
-        return { name: note.name, value: note.content };
+        return { name: note.name, value: '`' + note.content + '`' };
     });
 }
 
